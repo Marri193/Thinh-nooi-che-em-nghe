@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Text to Speech</title>
+</head>
+<body>
+    <textarea id="text" rows="6" cols="50" placeholder="nhap noi dung chat..."></textarea><br><br>
+    <select id="voiceSelect"></select><br><br>
+    <button onclick="speak()">phat giong noi</button>
+    <button onclick="stop()">stop</button>
+
+    <script>
+        const synth = window.speechSynthesis;
+        const voiceSelect = document.getElementById("voiceSelect");
+
+        function populateVoices() {
+            const voices = synth.getVoices();
+            voiceSelect.innerHTML = '';
+            voices.forEach((voice, i) => {
+                const option = document.createElement("option");
+                option.textContent = `${voice.name} (${voice.lang})`;
+                option.value = i;
+                voiceSelect.appendChild(option);
+            });
+        }
+
+        populateVoices();
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = populateVoices;
+        }
+
+        function speak() {
+            const text = document.getElementById("text").value;
+            const utterance = new SpeechSynthesisUtterance(text);
+            const selectedVoice = synth.getVoices()[voiceSelect.value];
+            utterance.voice = selectedVoice;
+            synth.speak(utterance);
+        }
+
+        function stop() {
+            synth.cancel();
+        }
+    </script>
+</body>
+</html>
