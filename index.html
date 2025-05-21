@@ -24,14 +24,19 @@
         voices = synth.getVoices();
 
         const voiceSelect = document.getElementById('voiceSelect');
-        voiceSelect.innerHTML = ''; // Xóa giọng cũ
+        voiceSelect.innerHTML = '';
+
+        let foundVietnamese = false;
 
         voices.forEach((voice) => {
             const option = document.createElement('option');
-            
-            // Gắn nhãn rõ ràng để người dùng biết tiếng gì
+
             if (voice.lang.includes('vi')) {
                 option.textContent = `🇻🇳 ${voice.name} (${voice.lang})`;
+                if (!foundVietnamese) {
+                    option.selected = true; // chọn giọng Việt đầu tiên làm mặc định
+                    foundVietnamese = true;
+                }
             } else if (voice.lang.includes('en')) {
                 option.textContent = `🇺🇸 ${voice.name} (${voice.lang})`;
             } else {
