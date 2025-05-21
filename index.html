@@ -24,16 +24,22 @@
         voices = synth.getVoices();
 
         const voiceSelect = document.getElementById('voiceSelect');
-        voiceSelect.innerHTML = ''; // Xoá danh sách cũ
+        voiceSelect.innerHTML = ''; // Xóa giọng cũ
 
         voices.forEach((voice) => {
-            // Chỉ thêm giọng tiếng Việt
+            const option = document.createElement('option');
+            
+            // Gắn nhãn rõ ràng để người dùng biết tiếng gì
             if (voice.lang.includes('vi')) {
-                const option = document.createElement('option');
+                option.textContent = `🇻🇳 ${voice.name} (${voice.lang})`;
+            } else if (voice.lang.includes('en')) {
+                option.textContent = `🇺🇸 ${voice.name} (${voice.lang})`;
+            } else {
                 option.textContent = `${voice.name} (${voice.lang})`;
-                option.value = voice.name;
-                voiceSelect.appendChild(option);
             }
+
+            option.value = voice.name;
+            voiceSelect.appendChild(option);
         });
     }
 
