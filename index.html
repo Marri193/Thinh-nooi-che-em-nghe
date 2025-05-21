@@ -16,37 +16,46 @@
     <button onclick="speak()">phat giong noi</button>
     <button onclick="stop()">stop</button>
 
-    <script>
-        const synth = window.speechSynthesis;
-        const voiceSelect = document.getElementById("voiceSelect");
+   <script>
+    let synth = window.speechSynthesis;
+    let voices = [];
 
-        function populateVoices() {
-            const voices = synth.getVoices();
-            voiceSelect.innerHTML = '';
-            voices.forEach((voice, i) => {
-                const option = document.createElement("option");
+    function populateVoices() {
+        voices = synth.getVoices();
+
+        const voiceSelect = document.getElementById('voiceSelect');
+        voiceSelect.innerHTML = ''; // Xoá danh sách cũ
+
+        voices.forEach((voice) => {
+            // Chỉ thêm giọng tiếng Việt
+            if (voice.lang.includes('vi')) {
+                const option = document.createElement('option');
                 option.textContent = `${voice.name} (${voice.lang})`;
-                option.value = i;
+                option.value = voice.name;
                 voiceSelect.appendChild(option);
-            });
-        }
+            }
+        });
+    }
 
-        populateVoices();
-        if (speechSynthesis.onvoiceschanged !== undefined) {
-            speechSynthesis.onvoiceschanged = populateVoices;
-        }
+    populateVoices();
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = populateVoices;
+    }
 
-        function speak() {
-            const text = document.getElementById("text").value;
-            const utterance = new SpeechSynthesisUtterance(text);
-            const selectedVoice = synth.getVoices()[voiceSelect.value];
+    function speak() {
+        const text = document.getElementById('text').value;
+        const selectedVoiceName = document.getElementById('voiceSelect').value;
+        const utterance = new SpeechSynthesisUtterance(text);
+
+        const selectedVoice = voices.find(voice => voice.name === selectedVoiceName);
+        if (selectedVoice) {
             utterance.voice = selectedVoice;
-            synth.speak(utterance);
         }
 
-        function stop() {
-            synth.cancel();
-        }
-    </script>
-</body>
-</html>
+        synth.speak(utterance);
+    }
+
+    function stop() {
+        synth.cancel();
+    }
+</script>
